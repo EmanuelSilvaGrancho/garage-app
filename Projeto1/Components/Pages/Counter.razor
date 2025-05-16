@@ -1,0 +1,28 @@
+﻿@page "/counter"
+@rendermode InteractiveServer
+
+<PageTitle>Toyota Yaris GR</PageTitle>
+
+<h1>Toyota Yaris GR</h1>
+
+<p>O Toyota Yaris GR é um hatchback desportivo desenvolvido pela Toyota com inspiração no mundo dos ralis.</p>
+
+<ul>
+    <li><strong>Motor:</strong> 1.6L turbo de três cilindros</li>
+    <li><strong>Potência:</strong> 276 HP / 280 PS</li>
+    <li><strong>Binário:</strong> 390 Nm</li>
+    <li><strong>Tração:</strong> AWD (tração integral)</li>
+    <li><strong>Caixa de velocidades:</strong> Manual de 6 velocidades ou Automática de 8 velocidades</li>
+    <li><strong>Preço:</strong> A partir de 58.000€</li>
+</ul>
+
+<button class="btn btn-primary" @onclick="ShowMoreInfo">Mais informações</button>
+
+@code {
+    private bool showMoreInfo = false;
+
+    private void ShowMoreInfo()
+    {
+        showMoreInfo = !showMoreInfo;
+    }
+}

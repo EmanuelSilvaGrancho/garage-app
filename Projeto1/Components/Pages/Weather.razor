@@ -1,0 +1,47 @@
+﻿@page "/weather"
+@rendermode InteractiveServer
+
+<PageTitle>Detalhes do Toyota Yaris GR</PageTitle>
+
+<h1>Detalhes do Toyota Yaris GR</h1>
+
+<p>O Toyota Yaris GR é um hatchback desportivo inspirado no mundo dos ralis, com um desempenho impressionante e tecnologia avançada.</p>
+
+<h2>Especificações Técnicas</h2>
+<ul>
+    <li><strong>Motor:</strong> 1.6L turbo de três cilindros (G16E-GTS)</li>
+    <li><strong>Potência:</strong> 280 HP / 206 kW</li>
+    <li><strong>Binário:</strong> 390 Nm</li>
+    <li><strong>Tração:</strong> AWD (tração integral)</li>
+    <li><strong>Caixa de velocidades:</strong> Manual de 6 velocidades ou Automática de 8 velocidades</li>
+    <li><strong>Consumo médio:</strong> Aproximadamente 8.5 L/100 km</li>
+    <li><strong>Depósito de combustível:</strong> 50 L</li>
+</ul>
+
+<h2>Dimensões e Peso</h2>
+<ul>
+    <li><strong>Comprimento:</strong> 399.5 cm</li>
+    <li><strong>Largura:</strong> 180.5 cm</li>
+    <li><strong>Altura:</strong> 145.5 cm</li>
+    <li><strong>Peso:</strong> 1300 kg</li>
+</ul>
+
+<h2>Suspensão e Travões</h2>
+<ul>
+    <li><strong>Suspensão dianteira:</strong> Independente MacPherson</li>
+    <li><strong>Suspensão traseira:</strong> Double wishbone</li>
+    <li><strong>Travões dianteiros:</strong> Discos ventilados de 356 mm</li>
+    <li><strong>Travões traseiros:</strong> Discos ventilados de 297 mm</li>
+</ul>
+
+<button class="btn btn-primary" @onclick="GoToHome">Voltar à página inicial</button>
+
+@code {
+    [Inject]
+    private NavigationManager Navigation { get; set; }
+
+    private void GoToHome()
+    {
+        Navigation.NavigateTo("/");
+    }
+}

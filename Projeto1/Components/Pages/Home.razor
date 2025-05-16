@@ -1,0 +1,21 @@
+﻿@page "/"
+@rendermode InteractiveServer
+
+@inject NavigationManager Navigation
+
+<PageTitle>Bem-vindo</PageTitle>
+
+<h1>Bem-vindo ao nosso site!</h1>
+
+<p>Este é o lugar onde você encontrará tudo sobre o incrível Toyota Yaris GR.</p>
+
+<p>Explore as especificações, curiosidades e novidades sobre este carro desportivo!</p>
+
+<button class="btn btn-primary" @onclick="GoToToyotaYarisGR">Saiba mais</button>
+
+@code {
+    private void GoToToyotaYarisGR()
+    {
+        Navigation.NavigateTo("/counter");
+    }
+}

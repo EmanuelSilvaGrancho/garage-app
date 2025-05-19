@@ -1,28 +1,33 @@
 ﻿@page "/counter"
 @rendermode InteractiveServer
+@inject NavigationManager NavigationManager
 
-<PageTitle>Toyota Yaris GR</PageTitle>
+<h1>Selecione o Carro de Interesse</h1>
 
-<h1>Toyota Yaris GR</h1>
+<div class="car-selection" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
+    <!-- Card para Toyota Yaris GR -->
+    <div class="car-card"
+         style="cursor: pointer; border: 1px solid #ccc; padding: 10px; border-radius: 5px; width: 240px; text-align: center;"
+         @onclick='() => SelecionarCarro("toyota-yaris-gr")'>
+        <img src="yaris.jpg" alt="Toyota Yaris GR" style="width: 100%; border-radius: 5px;">
+        <h3>Toyota Yaris GR</h3>
+    </div>
 
-<p>O Toyota Yaris GR é um hatchback desportivo desenvolvido pela Toyota com inspiração no mundo dos ralis.</p>
+    <!-- Card para Ford Mustang (exemplo) -->
+    <div class="car-card"
+         style="cursor: pointer; border: 1px solid #ccc; padding: 10px; border-radius: 5px; width: 240px; text-align: center;"
+         @onclick='() => SelecionarCarro("ford-mustang")'>
+        <img src="mustang.jpg" alt="Ford Mustang" style="width: 100%; border-radius: 5px;">
+        <h3>Ford Mustang</h3>
+    </div>
 
-<ul>
-    <li><strong>Motor:</strong> 1.6L turbo de três cilindros</li>
-    <li><strong>Potência:</strong> 276 HP / 280 PS</li>
-    <li><strong>Binário:</strong> 390 Nm</li>
-    <li><strong>Tração:</strong> AWD (tração integral)</li>
-    <li><strong>Caixa de velocidades:</strong> Manual de 6 velocidades ou Automática de 8 velocidades</li>
-    <li><strong>Preço:</strong> A partir de 58.000€</li>
-</ul>
-
-<button class="btn btn-primary" @onclick="ShowMoreInfo">Mais informações</button>
+    <!-- Adicione quantos carros desejar -->
+</div>
 
 @code {
-    private bool showMoreInfo = false;
-
-    private void ShowMoreInfo()
+    private void SelecionarCarro(string carroId)
     {
-        showMoreInfo = !showMoreInfo;
+        // Redireciona para a página de detalhes passando o identificador do carro na URL
+        NavigationManager.NavigateTo($"/detalhes/{carroId}");
     }
 }

@@ -1,0 +1,43 @@
+@page "/detalhes/{carroId}"
+@using Microsoft.AspNetCore.Components
+
+<h1>Detalhes do Carro</h1>
+
+@code {
+    [Parameter]
+    public string carroId { get; set; }
+}
+
+@if (carroId?.ToLower() == "toyota-yaris-gr")
+{
+    <h2>Toyota Yaris GR</h2>
+    <img src="toyota_yaris_gr.jpg" alt="Toyota Yaris GR" style="width:300px; border-radius: 5px;">
+    <ul>
+        <li><strong>Motor:</strong> 1.6L turbo de três cilindros</li>
+        <li><strong>Potência:</strong> 276 HP / 280 PS</li>
+        <li><strong>Binário:</strong> 390 Nm</li>
+        <li><strong>Tração:</strong> AWD (tração integral)</li>
+        <li><strong>Caixa de velocidades:</strong> Manual de 6 velocidades ou Automática de 8 velocidades</li>
+        <li><strong>Preço:</strong> A partir de 58.000€</li>
+    </ul>
+}
+else if (carroId?.ToLower() == "ford-mustang")
+{
+    <h2>Ford Mustang</h2>
+    <img src="ford_mustang.jpg" alt="Ford Mustang" style="width:300px; border-radius: 5px;">
+    <ul>
+        <li><strong>Motor:</strong> 5.0L V8</li>
+        <li><strong>Potência:</strong> 460 HP</li>
+        <li><strong>Binário:</strong> 529 Nm</li>
+        <li><strong>Aceleração:</strong> 0 a 100 km/h em 4.3 segundos</li>
+        <li><strong>Tração:</strong> Traseira</li>
+        <li><strong>Preço:</strong> A partir de 55.000€</li>
+    </ul>
+}
+else
+{
+    <p>Carro não encontrado.</p>
+}
+
+<!-- Link para voltar para a página de seleção -->
+<a href="counter" class="btn btn-secondary">← Voltar para a seleção</a>

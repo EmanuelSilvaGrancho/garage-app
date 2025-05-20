@@ -1,17 +1,13 @@
 @page "/detalhes/{carroId}"
+@rendermode InteractiveServer
 @using Microsoft.AspNetCore.Components
 
 <h1>Detalhes do Carro</h1>
 
-@code {
-    [Parameter]
-    public string carroId { get; set; }
-}
-
 @if (carroId?.ToLower() == "toyota-yaris-gr")
 {
     <h2>Toyota Yaris GR</h2>
-    <img src="toyota_yaris_gr.jpg" alt="Toyota Yaris GR" style="width:300px; border-radius: 5px;">
+    <img src="yaris.jpg" alt="Toyota Yaris GR" style="width:300px; border-radius: 5px;">
     <ul>
         <li><strong>Motor:</strong> 1.6L turbo de três cilindros</li>
         <li><strong>Potência:</strong> 276 HP / 280 PS</li>
@@ -24,7 +20,7 @@
 else if (carroId?.ToLower() == "ford-mustang")
 {
     <h2>Ford Mustang</h2>
-    <img src="ford_mustang.jpg" alt="Ford Mustang" style="width:300px; border-radius: 5px;">
+    <img src="mustang.jpg" alt="Ford Mustang" style="width:300px; border-radius: 5px;">
     <ul>
         <li><strong>Motor:</strong> 5.0L V8</li>
         <li><strong>Potência:</strong> 460 HP</li>
@@ -39,5 +35,10 @@ else
     <p>Carro não encontrado.</p>
 }
 
-<!-- Link para voltar para a página de seleção -->
-<a href="counter" class="btn btn-secondary">← Voltar para a seleção</a>
+<!-- Link para voltar para a página de modelos -->
+<a href="modelo/@(carroId?.Split('-')[0])" class="btn btn-secondary">← Voltar para os modelos</a>
+
+@code {
+    [Parameter]
+    public string carroId { get; set; }
+}

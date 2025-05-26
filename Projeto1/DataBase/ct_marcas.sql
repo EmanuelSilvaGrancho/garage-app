@@ -1,0 +1,5 @@
+CREATE TABLE "Marcas" (
+    "Id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "Nome" TEXT NOT NULL,
+    "LogoUrl" BLOB
+);

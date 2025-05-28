@@ -1,30 +1,37 @@
 @page "/marcas"
-@rendermode InteractiveServer
+@using Projeto1.Data
+@using Projeto1.Models
+@inject MarcaService MarcaService
 @inject NavigationManager NavigationManager
 
-<h1>Selecione a Marca</h1>
+<h1>Marcas</h1>
 
-<div class="car-selection" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
-    <!-- Card para Toyota -->
-    <div class="car-card"
-         style="cursor: pointer; border: 1px solid #ccc; padding: 10px; border-radius: 5px; width: 240px; text-align: center;"
-         @onclick='() => SelecionarMarca("toyota")'>
-        <img src="toyota.jpg" alt="Toyota" style="width: 100%; border-radius: 5px;">
-        <h3>Toyota</h3>
-    </div>
-
-    <!-- Card para Ford -->
-    <div class="car-card"
-         style="cursor: pointer; border: 1px solid #ccc; padding: 10px; border-radius: 5px; width: 240px; text-align: center;"
-         @onclick='() => SelecionarMarca("ford")'>
-        <img src="ford.jpg" alt="Ford" style="width: 100%; border-radius: 5px;">
-        <h3>Ford</h3>
-    </div>
-</div>
+@if (marcas == null)
+{
+    <p>A carregar marcas...</p>
+}
+else
+{
+    <ul>
+        @foreach (var marca in marcas)
+        {
+            <li @onclick="() => NavegarParaModelos(marca.Id)" style="cursor: pointer">
+                @marca.Nome
+            </li>
+        }
+    </ul>
+}
 
 @code {
-    private void SelecionarMarca(string marca)
+    private List<Marca> marcas;
+
+    protected override async Task OnInitializedAsync()
     {
-        NavigationManager.NavigateTo($"/modelo/{marca}");
+        marcas = await MarcaService.GetMarcasAsync();
+    }
+
+    private void NavegarParaModelos(int marcaId)
+    {
+        NavigationManager.NavigateTo($"/modelos/{marcaId}");
     }
 }

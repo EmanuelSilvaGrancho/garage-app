@@ -8,6 +8,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=garage_app.db"));
 
+// Registar o serviço MarcaService
+builder.Services.AddScoped<MarcaService>();
+builder.Services.AddScoped<ModeloService>();
+
+
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();

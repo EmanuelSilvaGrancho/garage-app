@@ -1,44 +1,38 @@
-@page "/modelo/{marca}"
-@rendermode InteractiveServer
-@inject NavigationManager NavigationManager
-@using Microsoft.AspNetCore.Components
+    @page "/modelos/{MarcaId:int}"
+    @using Projeto1.Models
+    @using Projeto1.Data
+    @inject ModeloService ModeloService
+    @inject MarcaService MarcaService
 
-<h1>Modelos da Marca: @marca</h1>
+    <h1>Modelos da marca: @marca?.Nome</h1>
 
-<div class="car-selection" style="display: flex; gap: 20px; flex-wrap: wrap; justify-content: center;">
-    
-    @if (marca?.ToLower() == "toyota")
+    @if (modelos == null)
     {
-        <!-- Card para Toyota Yaris GR -->
-        <div class="car-card"
-             style="cursor: pointer; border: 1px solid #ccc; padding: 10px; border-radius: 5px; width: 240px; text-align: center;"
-             @onclick='() => SelecionarModelo("toyota-yaris-gr")'>
-            <img src="yaris.jpg" alt="Toyota Yaris GR" style="width: 100%; border-radius: 5px;">
-            <h3>Toyota Yaris GR</h3>
-        </div>
+        <p>A carregar modelos...</p>
     }
-    else if (marca?.ToLower() == "ford")
+    else if (modelos.Count == 0)
     {
-        <!-- Card para Ford Mustang -->
-        <div class="car-card"
-             style="cursor: pointer; border: 1px solid #ccc; padding: 10px; border-radius: 5px; width: 240px; text-align: center;"
-             @onclick='() => SelecionarModelo("ford-mustang")'>
-            <img src="mustang.jpg" alt="Ford Mustang" style="width: 100%; border-radius: 5px;">
-            <h3>Ford Mustang</h3>
-        </div>
+        <p>Sem modelos para esta marca.</p>
     }
     else
     {
-        <p>Marca não encontrada.</p>
+        <ul>
+            @foreach (var modelo in modelos)
+            {
+                <li>@modelo.Nome</li>
+            }
+        </ul>
     }
-</div>
 
-@code {
-    [Parameter]
-    public string marca { get; set; }
+    @code {
+        [Parameter] public int MarcaId { get; set; }
 
-    private void SelecionarModelo(string modeloId)
-    {
-        NavigationManager.NavigateTo($"/detalhes/{modeloId}");
+        private List<Modelo> modelos;
+        private Marca marca;
+
+        protected override async Task OnInitializedAsync()
+        {
+            modelos = await ModeloService.GetModelosByMarcaIdAsync(MarcaId);
+            marca = await MarcaService.GetMarcaByIdAsync(MarcaId);
+        }
     }
-}

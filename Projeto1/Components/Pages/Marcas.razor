@@ -12,18 +12,16 @@
 }
 else
 {
-    <ul>
-        @foreach (var marca in marcas)
-        {
-            <li @onclick="() => NavegarParaModelos(marca.Id)" style="cursor: pointer">
-                @marca.Nome
-            </li>
-        }
-    </ul>
+    @foreach (var marca in marcas)
+{
+    <button @onclick="() => NavegarParaModelos(marca.Id)">
+        @marca.Nome
+    </button>
+}
 }
 
 @code {
-    private List<Marca> marcas;
+    private List<Marca>? marcas;
 
     protected override async Task OnInitializedAsync()
     {
@@ -31,7 +29,8 @@ else
     }
 
     private void NavegarParaModelos(int marcaId)
-    {
-        NavigationManager.NavigateTo($"/modelos/{marcaId}");
-    }
+{
+    Console.WriteLine($"Navegando para: {marcaId}");
+    NavigationManager.NavigateTo($"/modelos/{marcaId}");
+}
 }

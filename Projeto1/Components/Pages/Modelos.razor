@@ -1,38 +1,39 @@
-    @page "/modelos/{MarcaId:int}"
-    @using Projeto1.Models
-    @using Projeto1.Data
-    @inject ModeloService ModeloService
-    @inject MarcaService MarcaService
+@page "/modelos/{MarcaId:int}"
+@using Projeto1.Models
+@using Projeto1.Data
+@inject ModeloService ModeloService
+@inject MarcaService MarcaService
 
-    <h1>Modelos da marca: @marca?.Nome</h1>
+<h1>Modelos da marca: @marca?.Nome</h1>
 
-    @if (modelos == null)
-    {
-        <p>A carregar modelos...</p>
-    }
-    else if (modelos.Count == 0)
-    {
-        <p>Sem modelos para esta marca.</p>
-    }
-    else
-    {
-        <ul>
-            @foreach (var modelo in modelos)
-            {
-                <li>@modelo.Nome</li>
-            }
-        </ul>
-    }
-
-    @code {
-        [Parameter] public int MarcaId { get; set; }
-
-        private List<Modelo> modelos;
-        private Marca marca;
-
-        protected override async Task OnInitializedAsync()
+@if (modelos == null)
+{
+    <p>A carregar modelos...</p>
+}
+else if (modelos.Count == 0)
+{
+    <p>Sem modelos para esta marca.</p>
+}
+else
+{
+    <ul>
+        @foreach (var modelo in modelos)
         {
-            modelos = await ModeloService.GetModelosByMarcaIdAsync(MarcaId);
-            marca = await MarcaService.GetMarcaByIdAsync(MarcaId);
+            <li>@modelo.Nome</li>
         }
+    </ul>
+}
+
+@code {
+    [Parameter] public int MarcaId { get; set; }
+
+    private List<Modelo>? modelos;
+
+    private Marca? marca;
+
+    protected override async Task OnInitializedAsync()
+    {
+        modelos = await ModeloService.GetModelosByMarcaIdAsync(MarcaId);
+        marca = await MarcaService.GetMarcaByIdAsync(MarcaId) ?? new Marca { Nome = "Desconhecida" };
     }
+}

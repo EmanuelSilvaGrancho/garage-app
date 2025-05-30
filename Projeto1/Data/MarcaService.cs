@@ -1,7 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Projeto1.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Projeto1.Data
 {
@@ -19,9 +17,9 @@ namespace Projeto1.Data
             return await _context.Marcas.ToListAsync();
         }
 
-        public async Task<Marca> GetMarcaByIdAsync(int id)
+        public async Task<Marca?> GetMarcaByIdAsync(int id)
         {
-            return await _context.Marcas.FindAsync(id);
+            return await _context.Marcas.FirstOrDefaultAsync(m => m.Id == id);
         }
     }
 }

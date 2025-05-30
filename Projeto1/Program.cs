@@ -8,18 +8,17 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite("Data Source=garage_app.db"));
 
-// Registar o serviço MarcaService
+// Registar os serviços
 builder.Services.AddScoped<MarcaService>();
 builder.Services.AddScoped<ModeloService>();
 
-
-// Add services to the container.
+// Adiciona suporte aos Razor Components
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+// Configure o pipeline HTTP
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error", createScopeForErrors: true);

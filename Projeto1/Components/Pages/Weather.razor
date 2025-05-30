@@ -38,10 +38,10 @@
 
 @code {
     [Inject]
-    private NavigationManager Navigation { get; set; }
+    private NavigationManager? Navigation { get; set; }
 
     private void GoToHome()
     {
-        Navigation.NavigateTo("/");
+        Navigation?.NavigateTo("/");
     }
 }

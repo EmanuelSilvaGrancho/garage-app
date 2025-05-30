@@ -35,10 +35,9 @@ else
     <p>Carro não encontrado.</p>
 }
 
-<!-- Link para voltar para a página de modelos -->
-<a href="modelo/@(carroId?.Split('-')[0])" class="btn btn-secondary">← Voltar para os modelos</a>
+
 
 @code {
     [Parameter]
-    public string carroId { get; set; }
+    public string? carroId { get; set; }
 }

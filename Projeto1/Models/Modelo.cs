@@ -5,7 +5,6 @@ namespace Projeto1.Models
         public int Id { get; set; }
         public string Nome { get; set; } = string.Empty;
         public int MarcaId { get; set; }
-        public byte[]? LogoUrl { get; set; }
 
         public Marca? Marca { get; set; }  // Para relacionamento opcional
     }

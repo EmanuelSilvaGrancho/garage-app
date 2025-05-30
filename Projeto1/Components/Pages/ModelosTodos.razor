@@ -1,0 +1,35 @@
+@page "/ModelosTodos"
+@using Projeto1.Models
+@using Projeto1.Data
+@inject ModeloService ModeloService
+
+<h1>Todos os Modelos</h1>
+
+@if (modelos == null)
+{
+    <p>A carregar modelos...</p>
+}
+else if (modelos.Count == 0)
+{
+    <p>Não foram encontrados modelos.</p>
+}
+else
+{
+    <ul>
+        @foreach (var modelo in modelos)
+        {
+            <li>@modelo.Nome (@modelo.Marca?.Nome)</li>
+        }
+    </ul>
+}
+
+@code {
+    private List<Modelo>? modelos;
+
+    protected override async Task OnInitializedAsync()
+    {
+        modelos = (await ModeloService.GetTodosModelosAsync())
+        .OrderBy(m => m.Marca?.Nome)
+        .ToList();
+    }
+}

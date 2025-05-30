@@ -25,10 +25,10 @@ else
 }
 
 @code {
-    [Parameter] public int MarcaId { get; set; }
+    [Parameter]
+    public int MarcaId { get; set; }
 
     private List<Modelo>? modelos;
-
     private Marca? marca;
 
     protected override async Task OnInitializedAsync()

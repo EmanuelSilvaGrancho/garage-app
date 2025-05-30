@@ -18,5 +18,11 @@ namespace Projeto1.Data
                 .Where(m => m.MarcaId == marcaId)
                 .ToListAsync();
         }
+        public async Task<List<Modelo>> GetTodosModelosAsync()
+        {
+            return await _context.Modelos
+                .Include(m => m.Marca)
+                .ToListAsync();
+        }
     }
 }

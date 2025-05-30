@@ -12,12 +12,16 @@
 }
 else
 {
-    @foreach (var marca in marcas)
-{
-    <button @onclick="() => NavegarParaModelos(marca.Id)">
-        @marca.Nome
-    </button>
-}
+    <ul>
+        @foreach (var marca in marcas)
+        {
+            <li>
+                <button @onclick="@(() => NavegarParaModelos(marca.Id))">
+                    @marca.Nome
+                </button>
+            </li>
+        }
+    </ul>
 }
 
 @code {
@@ -28,9 +32,11 @@ else
         marcas = await MarcaService.GetMarcasAsync();
     }
 
-    private void NavegarParaModelos(int marcaId)
+   private void NavegarParaModelos(int marcaId)
 {
-    Console.WriteLine($"Navegando para: {marcaId}");
     NavigationManager.NavigateTo($"/modelos/{marcaId}");
+    Console.WriteLine($"[C#] Navegando para marca {marcaId}"); // Apenas visível no terminal, não no browser
+    
 }
+
 }

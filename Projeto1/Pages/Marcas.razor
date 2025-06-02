@@ -24,6 +24,49 @@ else
     </ul>
 }
 
+<style>
+
+    h1 {
+        font-size: 2.5rem;
+        color: #003366;
+        text-transform: uppercase;
+        font-weight: bold;
+        margin-bottom: 20px;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    li {
+        margin: 10px;
+    }
+
+    button {
+        background-color: #003366;
+        border: none;
+        color: #ffffff;
+        padding: 15px 30px;
+        font-size: 1.2rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+        border-radius: 8px;
+    }
+
+    button:hover {
+        background-color: #0055aa;
+    }
+    p {
+        font-size: 1.5rem;
+        color: #003366;
+    }
+</style>
+
 @code {
     private List<Marca>? marcas;
 
@@ -36,5 +79,4 @@ else
     {
         NavigationManager.NavigateTo($"/modelos/{marcaId}");
     }
-
 }

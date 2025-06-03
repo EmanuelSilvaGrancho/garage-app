@@ -1,0 +1,53 @@
+@page "/ApagarMarcas"
+@inject Data.MarcaService MarcaService
+@using Projeto1.Models
+
+<h3>Apagar Marcas</h3>
+
+@if (marcas == null)
+{
+    <p>A carregar marcas...</p>
+}
+else if (marcas.Count == 0)
+{
+    <p>Não existem marcas.</p>
+}
+else
+{
+    <ul>
+        @foreach (var marca in marcas)
+        {
+            <li>
+                @marca.Nome
+                <button @onclick="() => ApagarMarca(marca.Id)">Apagar</button>
+            </li>
+        }
+    </ul>
+}
+
+@if (mensagem != null)
+{
+    <p>@mensagem</p>
+}
+
+@code {
+    private List<Marca>? marcas;
+    private string? mensagem;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CarregarMarcas();
+    }
+
+    private async Task CarregarMarcas()
+    {
+        marcas = await MarcaService.GetMarcasAsync();
+    }
+
+    private async Task ApagarMarca(int id)
+    {
+        await MarcaService.ApagarMarcaAsync(id);
+        mensagem = "Marca apagada com sucesso!";
+        await CarregarMarcas(); // Atualiza a lista
+    }
+}

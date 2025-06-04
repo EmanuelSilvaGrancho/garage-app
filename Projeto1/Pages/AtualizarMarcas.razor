@@ -1,0 +1,59 @@
+@page "/AtualizarMarcas"
+@inject Data.MarcaService MarcaService
+@using Projeto1.Models
+
+<h3>Atualizar Marcas</h3>
+
+@if (marcas == null)
+{
+    <p>A carregar marcas...</p>
+}
+else if (marcas.Count == 0)
+{
+    <p>Não existem marcas.</p>
+}
+else
+{
+    <ul>
+        @foreach (var marca in marcas)
+        {
+            <li>
+                <input type="text" @bind="marca.Nome" />
+                <button @onclick="() => AtualizarMarca(marca)">Atualizar</button>
+            </li>
+        }
+    </ul>
+}
+
+@if (mensagem != null)
+{
+    <p>@mensagem</p>
+}
+
+@code {
+    private List<Marca>? marcas;
+    private string? mensagem;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CarregarMarcas();
+    }
+
+    private async Task CarregarMarcas()
+    {
+        marcas = await MarcaService.GetMarcasAsync();
+    }
+
+    private async Task AtualizarMarca(Marca marca)
+    {
+        if (!string.IsNullOrWhiteSpace(marca.Nome))
+        {
+            await MarcaService.AtualizarMarcaAsync(marca);
+            mensagem = $"Marca '{marca.Nome}' atualizada com sucesso!";
+        }
+        else
+        {
+            mensagem = "O nome da marca não pode estar vazio.";
+        }
+    }
+}

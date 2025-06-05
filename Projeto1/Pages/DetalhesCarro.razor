@@ -13,20 +13,11 @@ else
 {
     <h2>@modelo.Nome</h2>
 
-    @if (!string.IsNullOrEmpty(modelo.Imagem))
-    {
-        <img src="@modelo.Imagem" alt="@modelo.Nome" style="width:300px; border-radius: 5px;" />
-    }
-    else
-    {
-        <p><em>Imagem não disponível.</em></p>
-    }
-
+  
     <ul>
         <li><strong>Marca:</strong> @modelo.Marca?.Nome</li>
         <li><strong>ID do Modelo:</strong> @modelo.Id</li>
         <li><strong>ID da Marca:</strong> @modelo.MarcaId</li>
-        <!-- Aqui podes adicionar mais detalhes no futuro, como potência, motor, etc. -->
     </ul>
 }
 

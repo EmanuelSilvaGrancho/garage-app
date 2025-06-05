@@ -1,43 +1,42 @@
-@page "/detalhes/{carroId}"
+@page "/detalhes/{ModeloId:int}"
+@using Projeto1.Models
+@using Projeto1.Data
+@inject ModeloService ModeloService
 
-@using Microsoft.AspNetCore.Components
+<h1>Detalhes do Modelo</h1>
 
-<h1>Detalhes do Carro</h1>
-
-@if (carroId?.ToLower() == "toyota-yaris-gr")
+@if (modelo == null)
 {
-    <h2>Toyota Yaris GR</h2>
-    <img src="yaris.jpg" alt="Toyota Yaris GR" style="width:300px; border-radius: 5px;">
-    <ul>
-        <li><strong>Motor:</strong> 1.6L turbo de três cilindros</li>
-        <li><strong>Potência:</strong> 276 HP / 280 PS</li>
-        <li><strong>Binário:</strong> 390 Nm</li>
-        <li><strong>Tração:</strong> AWD (tração integral)</li>
-        <li><strong>Caixa de velocidades:</strong> Manual de 6 velocidades ou Automática de 8 velocidades</li>
-        <li><strong>Preço:</strong> A partir de 58.000€</li>
-    </ul>
-}
-else if (carroId?.ToLower() == "ford-mustang")
-{
-    <h2>Ford Mustang</h2>
-    <img src="mustang.jpg" alt="Ford Mustang" style="width:300px; border-radius: 5px;">
-    <ul>
-        <li><strong>Motor:</strong> 5.0L V8</li>
-        <li><strong>Potência:</strong> 460 HP</li>
-        <li><strong>Binário:</strong> 529 Nm</li>
-        <li><strong>Aceleração:</strong> 0 a 100 km/h em 4.3 segundos</li>
-        <li><strong>Tração:</strong> Traseira</li>
-        <li><strong>Preço:</strong> A partir de 55.000€</li>
-    </ul>
+    <p>Modelo não encontrado.</p>
 }
 else
 {
-    <p>Carro não encontrado.</p>
+    <h2>@modelo.Nome</h2>
+
+    @if (!string.IsNullOrEmpty(modelo.Imagem))
+    {
+        <img src="@modelo.Imagem" alt="@modelo.Nome" style="width:300px; border-radius: 5px;" />
+    }
+    else
+    {
+        <p><em>Imagem não disponível.</em></p>
+    }
+
+    <ul>
+        <li><strong>Marca:</strong> @modelo.Marca?.Nome</li>
+        <li><strong>ID do Modelo:</strong> @modelo.Id</li>
+        <li><strong>ID da Marca:</strong> @modelo.MarcaId</li>
+        <!-- Aqui podes adicionar mais detalhes no futuro, como potência, motor, etc. -->
+    </ul>
 }
 
-
-
 @code {
-    [Parameter]
-    public string? carroId { get; set; }
+    [Parameter] public int ModeloId { get; set; }
+
+    private Modelo? modelo;
+
+    protected override async Task OnInitializedAsync()
+    {
+        modelo = await ModeloService.GetModeloByIdAsync(ModeloId);
+    }
 }

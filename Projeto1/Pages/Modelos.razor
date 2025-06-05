@@ -19,7 +19,9 @@ else
     <ul>
         @foreach (var modelo in modelos)
         {
-            <li>@modelo.Nome</li>
+            <li>
+                <a href="@($"/detalhes/{modelo.Id}")">@modelo.Nome</a>
+            </li>
         }
     </ul>
 }
@@ -28,7 +30,6 @@ else
     [Parameter] public int MarcaId { get; set; }
 
     private List<Modelo>? modelos;
-
     private Marca? marca;
 
     protected override async Task OnInitializedAsync()

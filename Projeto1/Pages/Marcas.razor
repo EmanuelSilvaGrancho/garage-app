@@ -6,64 +6,145 @@
 
 <h1>Marcas</h1>
 
+<button class="botao-atualizar" @onclick="IrParaAtualizarMarcas">Atualizar Marcas</button>
+
 @if (marcas == null)
 {
     <p>A carregar marcas...</p>
 }
+else if (marcas.Count == 0)
+{
+    <p>Nenhuma marca encontrada.</p>
+}
 else
 {
-    <ul>
+    <div class="grid-marcas">
         @foreach (var marca in marcas)
         {
-            <li>
-                <button @onclick="@(() => NavegarParaModelos(marca.Id))">
-                    @marca.Nome
-                </button>
-            </li>
+            <div class="card">
+                @if (marca.Imagem != null)
+                {
+                    <img src="data:image/png;base64,@Convert.ToBase64String(marca.Imagem)" alt="@marca.Nome" />
+                }
+                else
+                {
+                    <div class="imagem-placeholder">Sem imagem</div>
+                }
+
+                <h2>@marca.Nome</h2>
+                <p><strong>País de origem:</strong> @marca.PaisOrigem</p>
+                @if (marca.Fundacao != null)
+                {
+                    <p><strong>Fundada em:</strong> @marca.Fundacao</p>
+                }
+                @if (!string.IsNullOrWhiteSpace(marca.Sede))
+                {
+                    <p><strong>Sede:</strong> @marca.Sede</p>
+                }
+
+                <button @onclick="@(() => NavegarParaModelos(marca.Id))">Ver Modelos</button>
+            </div>
         }
-    </ul>
+    </div>
 }
 
 <style>
-
     h1 {
         font-size: 2.5rem;
         color: #003366;
         text-transform: uppercase;
         font-weight: bold;
-        margin-bottom: 20px;
+        margin-bottom: 30px;
+        text-align: center;
     }
 
-    ul {
-        list-style: none;
-        padding: 0;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    li {
-        margin: 10px;
-    }
-
-    button {
-        background-color: #003366;
+    .botao-atualizar {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #228B22;
         border: none;
         color: #ffffff;
-        padding: 15px 30px;
-        font-size: 1.2rem;
+        padding: 12px 24px;
+        font-size: 1.1rem;
         font-weight: bold;
         cursor: pointer;
         transition: 0.3s;
         border-radius: 8px;
+        z-index: 1000;
     }
 
-    button:hover {
+    .botao-atualizar:hover {
+        background-color: #2E8B57;
+    }
+
+    .grid-marcas {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        padding: 0 40px;
+    }
+
+    .card {
+        background-color: #f4f4f4;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .card img {
+        width: 100%;
+        height: 150px;
+        object-fit: contain;
+        border-radius: 6px;
+        margin-bottom: 10px;
+    }
+
+    .imagem-placeholder {
+        width: 100%;
+        height: 150px;
+        background-color: #ccc;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        margin-bottom: 10px;
+        font-size: 1rem;
+    }
+
+    .card h2 {
+        font-size: 1.4rem;
+        color: #003366;
+        margin-bottom: 10px;
+    }
+
+    .card p {
+        margin: 4px 0;
+        color: #333;
+    }
+
+    .card button {
+        margin-top: 10px;
+        background-color: #003366;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background-color 0.3s;
+    }
+
+    .card button:hover {
         background-color: #0055aa;
     }
+
     p {
-        font-size: 1.5rem;
-        color: #003366;
+        font-size: 1.2rem;
+        text-align: center;
+        color: #555;
     }
 </style>
 
@@ -78,5 +159,10 @@ else
     private void NavegarParaModelos(int marcaId)
     {
         NavigationManager.NavigateTo($"/modelos/{marcaId}");
+    }
+
+    private void IrParaAtualizarMarcas()
+    {
+        NavigationManager.NavigateTo("/atualizarmarcas");
     }
 }

@@ -1,37 +1,94 @@
 @page "/AtualizarMarcas"
 @inject Data.MarcaService MarcaService
 @using Projeto1.Models
+@using Microsoft.AspNetCore.Components.Forms
 
-<h3>Atualizar Marcas</h3>
+<h3>Gestão de Marcas</h3>
 
 @if (marcas == null)
 {
     <p>A carregar marcas...</p>
 }
-else if (marcas.Count == 0)
-{
-    <p>Não existem marcas.</p>
-}
 else
 {
-    <ul>
-        @foreach (var marca in marcas)
-        {
-            <li>
-                <input type="text" @bind="marca.Nome" />
-                <button @onclick="() => AtualizarMarca(marca)">Atualizar</button>
-            </li>
-        }
-    </ul>
+    <table class="tabela">
+        <thead>
+            <tr>
+                <th>Imagem</th>
+                <th>Nome</th>
+                <th>País</th>
+                <th>Fundação</th>
+                <th>Sede</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var marca in marcas)
+            {
+                <tr>
+                    <td>
+                        @if (marca.Imagem != null)
+                        {
+                            <img src="data:image/png;base64,@Convert.ToBase64String(marca.Imagem)" width="50" />
+                        }
+                        else
+                        {
+                            <span>Sem imagem</span>
+                        }
+                    </td>
+                    <td><input @bind="marca.Nome" /></td>
+                    <td><input @bind="marca.PaisOrigem" /></td>
+                    <td><input type="number" @bind="marca.Fundacao" /></td>
+                    <td><input @bind="marca.Sede" /></td>
+                    <td>
+                        <InputFile OnChange="e => CarregarImagem(e, marca)" />
+                        <button @onclick="@(() => AtualizarMarca(marca))">Atualizar</button>
+                        <button @onclick="@(() => ApagarMarca(marca.Id))">Apagar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <hr />
+    <h4>Nova Marca</h4>
+    <div class="nova-marca-form">
+        <input placeholder="Nome" @bind="novaMarca.Nome" />
+        <input placeholder="País" @bind="novaMarca.PaisOrigem" />
+        <input placeholder="Fundação" type="number" @bind="novaMarca.Fundacao" />
+        <input placeholder="Sede" @bind="novaMarca.Sede" />
+        <InputFile OnChange="e => CarregarImagem(e, novaMarca)" />
+        <button @onclick="AdicionarMarca">Adicionar Marca</button>
+    </div>
 }
 
-@if (mensagem != null)
+@if (!string.IsNullOrWhiteSpace(mensagem))
 {
     <p>@mensagem</p>
 }
 
+<style>
+    .tabela {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    .tabela th, .tabela td {
+        border: 1px solid #ccc;
+        padding: 10px;
+    }
+    .tabela img {
+        border-radius: 5px;
+    }
+    .nova-marca-form input {
+        margin-right: 10px;
+        margin-bottom: 10px;
+    }
+</style>
+
 @code {
     private List<Marca>? marcas;
+    private Marca novaMarca = new Marca();
     private string? mensagem;
 
     protected override async Task OnInitializedAsync()
@@ -55,5 +112,35 @@ else
         {
             mensagem = "O nome da marca não pode estar vazio.";
         }
+    }
+
+    private async Task ApagarMarca(int id)
+    {
+        await MarcaService.ApagarMarcaAsync(id);
+        await CarregarMarcas();
+        mensagem = "Marca removida com sucesso.";
+    }
+
+    private async Task AdicionarMarca()
+    {
+        if (!string.IsNullOrWhiteSpace(novaMarca.Nome))
+        {
+            await MarcaService.AdicionarMarcaAsync(novaMarca);
+            novaMarca = new Marca();
+            await CarregarMarcas();
+            mensagem = "Marca adicionada com sucesso.";
+        }
+        else
+        {
+            mensagem = "Preencha pelo menos o nome.";
+        }
+    }
+
+    private async Task CarregarImagem(InputFileChangeEventArgs e, Marca marca)
+    {
+        var file = e.File;
+        var buffer = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffer);
+        marca.Imagem = buffer;
     }
 }

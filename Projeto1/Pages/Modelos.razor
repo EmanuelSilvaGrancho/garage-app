@@ -3,6 +3,7 @@
 @using Projeto1.Data
 @inject ModeloService ModeloService
 @inject MarcaService MarcaService
+@inject NavigationManager NavigationManager
 
 <h1>Modelos da marca: @marca?.Nome</h1>
 
@@ -16,15 +17,110 @@ else if (modelos.Count == 0)
 }
 else
 {
-    <ul>
+    <div class="grid-modelos">
         @foreach (var modelo in modelos)
         {
-            <li>
-                <a href="@($"/detalhes/{modelo.Id}")">@modelo.Nome</a>
-            </li>
+            <div class="card" @onclick="@(() => IrParaDetalhes(modelo.Id))">
+                @if (modelo.Imagem != null)
+                {
+                    <img src="data:image/png;base64,@Convert.ToBase64String(modelo.Imagem)" alt="@modelo.Nome" />
+                }
+                else
+                {
+                    <div class="imagem-placeholder">Sem imagem</div>
+                }
+
+                <h2>@modelo.Nome</h2>
+            </div>
         }
-    </ul>
+    </div>
 }
+
+<button class="botao-atualizar-modelos" @onclick="IrParaAtualizarModelos">Atualizar Modelos</button>
+
+<style>
+    h1 {
+        font-size: 2.2rem;
+        color: #003366;
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .grid-modelos {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+        padding: 0 40px;
+    }
+
+    .card {
+        background-color: #f4f4f4;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card img {
+        width: 100%;
+        height: 150px;
+        object-fit: contain;
+        border-radius: 6px;
+        margin-bottom: 10px;
+    }
+
+    .imagem-placeholder {
+        width: 100%;
+        height: 150px;
+        background-color: #ccc;
+        color: #333;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+        margin-bottom: 10px;
+        font-size: 1rem;
+    }
+
+    .card h2 {
+        font-size: 1.2rem;
+        color: #003366;
+        margin-top: 10px;
+    }
+
+    .botao-atualizar-modelos {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #228B22;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 50px;
+        font-size: 1rem;
+        font-weight: bold;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        cursor: pointer;
+        z-index: 1000;
+        transition: background-color 0.3s;
+    }
+
+    .botao-atualizar-modelos:hover {
+        background-color: #2E8B57;
+    }
+
+    p {
+        font-size: 1.2rem;
+        text-align: center;
+        color: #555;
+    }
+</style>
 
 @code {
     [Parameter] public int MarcaId { get; set; }
@@ -35,6 +131,16 @@ else
     protected override async Task OnInitializedAsync()
     {
         modelos = await ModeloService.GetModelosByMarcaIdAsync(MarcaId);
-        marca = await MarcaService.GetMarcaByIdAsync(MarcaId) ?? new Marca { Nome = "Desconhecida" };
+        marca = await MarcaService.GetMarcaByIdAsync(MarcaId);
+    }
+
+    private void IrParaDetalhes(int modeloId)
+    {
+        NavigationManager.NavigateTo($"/detalhes/{modeloId}");
+    }
+
+    private void IrParaAtualizarModelos()
+    {
+        NavigationManager.NavigateTo("/AtualizarModelos");
     }
 }

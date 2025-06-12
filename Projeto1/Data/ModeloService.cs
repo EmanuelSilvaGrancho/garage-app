@@ -12,20 +12,52 @@ namespace Projeto1.Data
             _context = context;
         }
 
-        // Retorna todos os modelos de uma marca específica
+        // Listar todos os modelos com marca incluída
+        public async Task<List<Modelo>> GetModelosAsync()
+        {
+            return await _context.Modelos.Include(m => m.Marca).ToListAsync();
+        }
+
+        // Listar modelos de uma marca específica
         public async Task<List<Modelo>> GetModelosByMarcaIdAsync(int marcaId)
         {
             return await _context.Modelos
                 .Where(m => m.MarcaId == marcaId)
+                .Include(m => m.Marca)
                 .ToListAsync();
         }
 
-        // Retorna os detalhes de um modelo por ID, incluindo a marca
+        // Obter modelo por ID
         public async Task<Modelo?> GetModeloByIdAsync(int id)
         {
             return await _context.Modelos
                 .Include(m => m.Marca)
                 .FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+        // Adicionar um novo modelo
+        public async Task AdicionarModeloAsync(Modelo modelo)
+        {
+            _context.Modelos.Add(modelo);
+            await _context.SaveChangesAsync();
+        }
+
+        // Atualizar um modelo existente
+        public async Task AtualizarModeloAsync(Modelo modelo)
+        {
+            _context.Entry(modelo).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        // Apagar um modelo
+        public async Task ApagarModeloAsync(int id)
+        {
+            var modelo = await _context.Modelos.FindAsync(id);
+            if (modelo != null)
+            {
+                _context.Modelos.Remove(modelo);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

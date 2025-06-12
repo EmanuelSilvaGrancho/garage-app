@@ -32,6 +32,18 @@ namespace Projeto1.Models
         [Column(TypeName = "decimal(18,2)")]
         public decimal Preco { get; set; }
 
+        [Required]
+        public int Ano { get; set; }
+
+        [Required]
+        public string? Categoria { get; set; }
+
+        [Required]
+        public string? Transmissao { get; set; }
+
+        [Required]
+        public string? Combustivel { get; set; }
+
         public Marca? Marca { get; set; }
     }
 }

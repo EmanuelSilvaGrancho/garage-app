@@ -1,0 +1,262 @@
+@page "/AtualizarModelos"
+@inject Data.ModeloService ModeloService
+@inject Data.MarcaService MarcaService
+@using Projeto1.Models
+@using Microsoft.AspNetCore.Components.Forms
+
+<h3>Gestão de Modelos</h3>
+
+@if (modelos == null || marcas == null)
+{
+    <p>A carregar modelos e marcas...</p>
+}
+else
+{
+    <table class="tabela">
+        <thead>
+            <tr>
+                <th>Imagem</th>
+                <th>Nome</th>
+                <th>Marca</th>
+                <th>Preço (€)</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var modelo in modelos)
+            {
+                <tr>
+                    <td>
+                        @if (modelo.Imagem != null)
+                        {
+                            <img src="data:image/png;base64,@Convert.ToBase64String(modelo.Imagem)" width="50" />
+                        }
+                        else
+                        {
+                            <span>Sem imagem</span>
+                        }
+                    </td>
+                    <td>@modelo.Nome</td>
+                    <td>@marcas.FirstOrDefault(m => m.Id == modelo.MarcaId)?.Nome</td>
+                    <td>@modelo.Preco.ToString("F2")</td>
+                    <td>
+                        <button @onclick="() => EditarModelo(modelo)">Editar</button>
+                        <button @onclick="() => ApagarModelo(modelo.Id)">Apagar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <hr />
+
+    <h4>@(modeloSelecionado != null ? "Editar Modelo" : "Novo Modelo")</h4>
+    <EditForm Model="modeloForm" OnValidSubmit="SalvarModelo">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div>
+            <label>Nome:</label><br />
+            <InputText @bind-Value="modeloForm.Nome" />
+        </div>
+
+        <div>
+            <label>Marca:</label><br />
+            <select @bind="modeloForm.MarcaId">
+                <option value="0">-- Escolher Marca --</option>
+                @foreach (var marca in marcas)
+                {
+                    <option value="@marca.Id">@marca.Nome</option>
+                }
+            </select>
+        </div>
+
+        <div>
+            <label>Ano:</label><br />
+            <InputNumber @bind-Value="modeloForm.Ano" />
+        </div>
+
+        <div>
+            <label>Categoria:</label><br />
+            <InputText @bind-Value="modeloForm.Categoria" placeholder="Hatch, SUV, Sedan..." />
+        </div>
+
+        <div>
+            <label>Transmissão:</label><br />
+            <InputText @bind-Value="modeloForm.Transmissao" placeholder="Manual, Automática..." />
+        </div>
+
+        <div>
+            <label>Combustível:</label><br />
+            <InputText @bind-Value="modeloForm.Combustivel" placeholder="Gasolina, Elétrico, Híbrido..." />
+        </div>
+
+        <div>
+            <label>Potência (cv):</label><br />
+            <InputNumber @bind-Value="modeloForm.Potencia" />
+        </div>
+
+        <div>
+            <label>Binário (Nm):</label><br />
+            <InputNumber @bind-Value="modeloForm.Binario" />
+        </div>
+
+        <div>
+            <label>Motor:</label><br />
+            <InputText @bind-Value="modeloForm.Motor" />
+        </div>
+
+        <div>
+            <label>Tração:</label><br />
+            <InputText @bind-Value="modeloForm.Tracao" />
+        </div>
+
+        <div>
+            <label>Preço (€):</label><br />
+            <InputNumber @bind-Value="modeloForm.Preco" step="0.01" />
+        </div>
+
+        <div>
+            <label>Imagem:</label><br />
+            <InputFile OnChange="CarregarImagem" />
+            @if (imagemPreview != null)
+            {
+                <div style="margin-top:10px;">
+                    <img src="@imagemPreview" width="100" />
+                </div>
+            }
+        </div>
+
+        <button type="submit">Salvar</button>
+        @if (modeloSelecionado != null)
+        {
+            <button type="button" @onclick="CancelarEdicao">Cancelar</button>
+        }
+    </EditForm>
+}
+
+@if (!string.IsNullOrWhiteSpace(mensagem))
+{
+    <p>@mensagem</p>
+}
+
+<style>
+    .tabela {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    .tabela th, .tabela td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+    }
+    .tabela img {
+        border-radius: 5px;
+    }
+    form > div {
+        margin-bottom: 10px;
+    }
+</style>
+
+@code {
+    private List<Modelo>? modelos;
+    private List<Marca>? marcas;
+    private Modelo modeloSelecionado;
+    private Modelo modeloForm = new Modelo();
+    private string? mensagem;
+    private string? imagemPreview;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CarregarDados();
+    }
+
+    private async Task CarregarDados()
+    {
+        modelos = await ModeloService.GetModelosAsync();
+        marcas = await MarcaService.GetMarcasAsync();
+    }
+
+    private void EditarModelo(Modelo modelo)
+    {
+        modeloSelecionado = modelo;
+        modeloForm = new Modelo
+        {
+            Id = modelo.Id,
+            Nome = modelo.Nome,
+            MarcaId = modelo.MarcaId,
+            Ano = modelo.Ano,
+            Categoria = modelo.Categoria,
+            Transmissao = modelo.Transmissao,
+            Combustivel = modelo.Combustivel,
+            Potencia = modelo.Potencia,
+            Binario = modelo.Binario,
+            Motor = modelo.Motor,
+            Tracao = modelo.Tracao,
+            Preco = modelo.Preco,
+            Imagem = modelo.Imagem
+        };
+        if (modelo.Imagem != null)
+            imagemPreview = $"data:image/png;base64,{Convert.ToBase64String(modelo.Imagem)}";
+        else
+            imagemPreview = null;
+    }
+
+    private void CancelarEdicao()
+    {
+        modeloSelecionado = null;
+        modeloForm = new Modelo();
+        imagemPreview = null;
+        mensagem = null;
+    }
+
+    private async Task SalvarModelo()
+    {
+        if (string.IsNullOrWhiteSpace(modeloForm.Nome))
+        {
+            mensagem = "O nome do modelo é obrigatório.";
+            return;
+        }
+
+        if (modeloForm.MarcaId == 0)
+        {
+            mensagem = "Escolha uma marca.";
+            return;
+        }
+
+        if (modeloSelecionado == null)
+        {
+            // Novo modelo
+            await ModeloService.AdicionarModeloAsync(modeloForm);
+            mensagem = $"Modelo '{modeloForm.Nome}' adicionado com sucesso!";
+        }
+        else
+        {
+            // Editar existente
+            await ModeloService.AtualizarModeloAsync(modeloForm);
+            mensagem = $"Modelo '{modeloForm.Nome}' atualizado com sucesso!";
+            modeloSelecionado = null;
+        }
+
+        modeloForm = new Modelo();
+        imagemPreview = null;
+        await CarregarDados();
+    }
+
+    private async Task ApagarModelo(int id)
+    {
+        await ModeloService.ApagarModeloAsync(id);
+        await CarregarDados();
+        mensagem = "Modelo removido com sucesso.";
+    }
+
+    private async Task CarregarImagem(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        var buffer = new byte[file.Size];
+        await file.OpenReadStream().ReadAsync(buffer);
+        modeloForm.Imagem = buffer;
+        imagemPreview = $"data:image/png;base64,{Convert.ToBase64String(buffer)}";
+    }
+}

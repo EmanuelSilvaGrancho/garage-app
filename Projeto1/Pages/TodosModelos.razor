@@ -1,0 +1,81 @@
+@page "/todosmodelos"
+@using Projeto1.Data
+@using Projeto1.Models
+@inject Projeto1.Data.ModeloService ModeloService
+@inject Projeto1.Data.MarcaService MarcaService
+
+<h1>Todos os Modelos</h1>
+
+@if (modelos == null || marcas == null)
+{
+    <p>A carregar modelos...</p>
+}
+else if (modelos.Count == 0)
+{
+    <p>Não existem modelos registados.</p>
+}
+else
+{
+    <table class="tabela-modelos">
+        <thead>
+            <tr>
+                <th>Imagem</th>
+                <th>Nome do Modelo</th>
+                <th>Marca</th>
+                <th>Ano</th>
+                <th>Categoria</th>
+                <th>Preço (€)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var modelo in modelos)
+            {
+                var marca = marcas.FirstOrDefault(m => m.Id == modelo.MarcaId);
+                <tr>
+                    <td>
+                        @if (modelo.Imagem != null)
+                        {
+                            <img src="data:image/png;base64,@Convert.ToBase64String(modelo.Imagem)" width="60" />
+                        }
+                        else
+                        {
+                            <span>Sem imagem</span>
+                        }
+                    </td>
+                    <td>@modelo.Nome</td>
+                    <td>@(marca?.Nome ?? "Marca Desconhecida")</td>
+                    <td>@modelo.Ano</td>
+                    <td>@modelo.Categoria</td>
+                    <td>@modelo.Preco.ToString("F2")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<style>
+    .tabela-modelos {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+    .tabela-modelos th, .tabela-modelos td {
+        border: 1px solid #ccc;
+        padding: 10px;
+        text-align: center;
+    }
+    .tabela-modelos img {
+        border-radius: 5px;
+    }
+</style>
+
+@code {
+    private List<Modelo>? modelos;
+    private List<Marca>? marcas;
+
+    protected override async Task OnInitializedAsync()
+    {
+        modelos = await ModeloService.GetModelosAsync();
+        marcas = await MarcaService.GetMarcasAsync();
+    }
+}

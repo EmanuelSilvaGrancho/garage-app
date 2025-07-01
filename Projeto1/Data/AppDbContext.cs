@@ -6,11 +6,11 @@ namespace Projeto1.Data
     public class AppDbContext : DbContext
     {
         public AppDbContext(DbContextOptions<AppDbContext> options)
-            : base(options)
-        {
-        }
+            : base(options) { }
 
         public DbSet<Marca> Marcas { get; set; }
         public DbSet<Modelo> Modelos { get; set; }
+
+        public DbSet<UserAccount> UserAccounts { get; set; }
     }
 }

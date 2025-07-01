@@ -1,7 +1,19 @@
 using Projeto1.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = "auth_token";
+        options.LoginPath = "/Login";
+        options.Cookie.MaxAge = TimeSpan.FromMinutes(30);
+        options.AccessDeniedPath = "/AccessDenied";
+    });
+builder.Services.AddAuthentication();
+builder.Services.AddCascadingAuthenticationState();
 
 // Adiciona o DbContext com SQLite
 builder.Services.AddDbContext<AppDbContext>(options =>
